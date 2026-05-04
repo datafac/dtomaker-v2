@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-		<PackageReference Include="DataFac.Storage.Testing" Version="3.0.24" />
+		<PackageReference Include="DataFac.Storage.Testing" Version="3.0.25" />
 	</ItemGroup>
 
 	<ItemGroup>
