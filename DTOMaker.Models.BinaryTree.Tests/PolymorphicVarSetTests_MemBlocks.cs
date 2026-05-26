@@ -1,11 +1,7 @@
 using DataFac.Storage.Testing;
 using DTOMaker.Runtime;
-using DTOMaker.Runtime.MemBlocks;
 using Shouldly;
 using System;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using TestOrg.TestApp.Models;
 using TestOrg.TestApp.Models.MemBlocks;
@@ -13,30 +9,6 @@ using VerifyXunit;
 using Xunit;
 
 namespace DTOMaker.Models.BinaryTree.Tests;
-
-public static class VerifyHelpers
-{
-    public static string ToDisplay(this ReadOnlyMemory<byte> buffer)
-    {
-        var result = new StringBuilder();
-        int i = 0;
-        foreach (byte b in buffer.Span)
-        {
-            if (i % 32 == 0)
-            {
-                if (i > 0) result.AppendLine();
-            }
-            else
-            {
-                result.Append('-');
-            }
-            result.Append(b.ToString("X2"));
-            i++;
-        }
-        result.AppendLine();
-        return result.ToString();
-    }
-}
 
 public class PolymorphicVarSetTests_MemBlocks
 {

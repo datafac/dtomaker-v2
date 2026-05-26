@@ -7,7 +7,7 @@ namespace TestOrg.TestApp.Models
     [Entity(2)]
     public interface IVarSet : IEntityBase
     {
-        [Member(1)][Name("set")] IVarSetNode Root { get; set; }
+        [Member(1)][Name("set")] IVarSetNode? Root { get; set; }
     }
 
     [Entity(3)]

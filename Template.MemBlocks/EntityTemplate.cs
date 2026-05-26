@@ -37,10 +37,10 @@ using T_CustomMemberType_ = System.DayOfWeek;
 using T_NativeMemberType_ = System.Int32;
 namespace DataFac.Memory
 {
-    public static class Codec_T_NativeMemberType__T_MemberBELE_
+    public sealed class Codec_T_NativeMemberType__T_MemberBELE_ : ISpanCodec<T_NativeMemberType_>
     {
         public static T_NativeMemberType_ ReadFromSpan(ReadOnlySpan<byte> source) => Codec_Int32_LE.ReadFromSpan(source);
-        public static void WriteToSpan(Span<byte> source, T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
+        public static void WriteToSpan(Span<byte> source, in T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
     }
 }
 namespace T_MemberTypeImplSpace_
@@ -905,6 +905,10 @@ namespace T_ImplNameSpace_
 
         /// <inheritdoc/>
         public bool Equals(T_EntityImplName_? other) => base.Equals(other);
+        /// <inheritdoc/>
+        public override bool Equals(object? obj) => obj is T_EntityImplName_ other && Equals(other);
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
         /// <inheritdoc/>
         public static bool operator ==(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? left.Equals(right) : (right is null);
         /// <inheritdoc/>
