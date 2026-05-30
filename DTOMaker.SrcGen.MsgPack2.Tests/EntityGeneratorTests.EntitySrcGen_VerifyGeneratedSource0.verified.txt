@@ -193,6 +193,7 @@ namespace MyOrg.Models.MsgPack2
             return true;
         }
         public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        public override int GetHashCode() => base.GetHashCode();
         public static bool operator ==(MyDTO_Default? left, MyDTO_Default? right) => left is not null ? left.Equals(right) : (right is null);
         public static bool operator !=(MyDTO_Default? left, MyDTO_Default? right) => left is not null ? !left.Equals(right) : (right is not null);
     }

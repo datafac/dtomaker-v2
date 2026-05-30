@@ -658,6 +658,7 @@ namespace T_ImplNameSpace_
             return true;
         }
         public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);
+        public override int GetHashCode() => base.GetHashCode();
         public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);
         public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);
     }

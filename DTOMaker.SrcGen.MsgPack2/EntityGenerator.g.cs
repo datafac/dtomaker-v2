@@ -786,6 +786,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            return true;");
             Emit("        }");
             Emit("        public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);");
+            Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("        public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);");
             Emit("        public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);");
             Emit("    }");
