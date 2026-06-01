@@ -43,6 +43,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        public T_MemberTypeImplName_() { }");
             Emit("        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }");
             Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
+            Emit("        protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();");
             Emit("");
             Emit("        [Key(1)]");
             Emit("        public long Field1 { get; set; }");
@@ -905,6 +906,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 } // switch
             }
             Emit("        }");
+            Emit("");
+            Emit("        /// <inheritdoc/>");
+            Emit("        protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();");
             Emit("");
             Emit("        /// <inheritdoc/>");
             Emit("        protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);");

@@ -1,8 +1,10 @@
 ﻿using DataFac.Memory;
+using DataFac.Storage;
 using DTOMaker.Models;
 using MessagePack;
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MsgPack2
 {
@@ -10,7 +12,7 @@ namespace DTOMaker.Runtime.MsgPack2
     /// Provides a base class for MsgPack2 generated entities, supporting identity, equality comparison, 
     /// and a frozen state to prevent further modification.
     /// </summary>
-    public abstract class EntityBase : IEntityBase, IEquatable<EntityBase>
+    public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     {
         /// <summary>
         /// Represents the default entity identifier value.
@@ -94,5 +96,62 @@ namespace DTOMaker.Runtime.MsgPack2
         /// </summary>
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
 
+        #region IPackable implementation
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void ThrowIsNotPackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not packed.");
+
+        /// <summary>
+        /// Ensures that the entity is packed and throws an exception if it is not.
+        /// </summary>
+        /// <param name="methodName"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ThrowIfNotPacked([CallerMemberName] string? methodName = null)
+        {
+            if (!_packed) ThrowIsNotPackedException(methodName);
+        }
+
+        /// <summary>
+        /// When implemented in a derived class, serializes the entity's data into a byte array.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
+        /// <inheritdoc/>
+        public ReadOnlyMemory<byte> Serialize()
+        {
+            ThrowIfNotPacked();
+            return OnSerialize();
+        }
+
+        private volatile bool _packed;
+        /// <inheritdoc/>
+        [IgnoreMember]
+        public bool IsPacked => _packed;
+        protected virtual ValueTask OnPack(IDataStore dataStore) => default;
+        public async ValueTask Pack(IDataStore dataStore)
+        {
+            if (_frozen) return;
+            if (_packed) return;
+            await OnPack(dataStore);
+            _packed = true;
+            OnFreeze();
+            _frozen = true;
+            _unpacked = true;
+        }
+
+        private volatile bool _unpacked;
+        /// <inheritdoc/>
+        [IgnoreMember]
+        public bool IsUnpacked => _unpacked;
+        protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth) => default;
+        public async ValueTask Unpack(IDataStore dataStore, int depth = 0)
+        {
+            ThrowIfNotPacked();
+            if (depth < 0) return;
+            if (_unpacked) return;
+            await OnUnpack(dataStore, depth);
+            _unpacked = true;
+        }
+        public ValueTask UnpackAll(IDataStore dataStore) => Unpack(dataStore, int.MaxValue);
+        #endregion
     }
 }

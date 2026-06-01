@@ -42,6 +42,7 @@ namespace T_MemberTypeImplSpace_
         public T_MemberTypeImplName_() { }
         public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }
         protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
+        protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();
 
         [Key(1)]
         public long Field1 { get; set; }
@@ -769,6 +770,9 @@ namespace T_ImplNameSpace_
             //##} // switch
             //##}
         }
+
+        /// <inheritdoc/>
+        protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();
 
         /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);

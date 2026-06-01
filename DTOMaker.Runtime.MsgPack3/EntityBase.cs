@@ -90,6 +90,16 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
         if (!_frozen) ThrowIsNotFrozenException(methodName);
     }
 
+    /// <inheritdoc/>
+    public bool Equals(EntityBase? other) => true;
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => obj is EntityBase;
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
+
+    #region IPackable implementation
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void ThrowIsNotPackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not packed.");
 
@@ -103,16 +113,6 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
         if (!_packed) ThrowIsNotPackedException(methodName);
     }
 
-    /// <inheritdoc/>
-    public bool Equals(EntityBase? other) => true;
-
-    /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is EntityBase;
-
-    /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
-
-    #region IPackable implementation
     protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
     public ReadOnlyMemory<byte> Serialize()
     {
