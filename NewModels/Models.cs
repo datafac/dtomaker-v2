@@ -29,48 +29,19 @@ namespace DTOMaker.Runtime
 namespace NewModels
 {
     [Entity(1)]
-    public interface IDomainBase : IEntityBase
+    public interface IT_BaseImplName__ : IEntityBase
     {
-    }
-
-    [Entity(2)]
-    public interface IVarSet : IDomainBase
-    {
-        [Member(1)][Name("set")] IVarSetNode? Root { get; }
-    }
-
-    [Entity(3)]
-    public interface IVarSetNode : IDomainBase
-    {
-        [Member(1)][Name("N")] int Count { get; }
-        [Member(2)][Name("D")] byte Depth { get; }
-        [Member(3)][Name("key")] string Key { get; }
-        [Member(4)][Name("val")] IVarBase Value { get; }
-        [Member(5)][Name("L")] IVarSetNode? Left { get; }
-        [Member(6)][Name("R")] IVarSetNode? Right { get; }
     }
 
     [Entity(4)]
-    public interface IVarBase : IDomainBase
+    public interface IT_AbstractEntity_ : IT_BaseImplName__
     {
     }
 
     [Entity(5)]
-    public interface IVarBoolean : IVarBase
+    public interface IT_ConcreteEntity_ : IT_AbstractEntity_
     {
-        [Member(1)][Name("val")] Boolean Value { get; }
-    }
-
-    [Entity(6)]
-    public interface IVarString : IVarBase
-    {
-        [Member(1)][Name("val")] String Value { get; }
-    }
-
-    [Entity(7)]
-    public interface IVarInt64 : IVarBase
-    {
-        [Member(1)][Name("val")] Int64 Value { get; }
+        [Member(1)][Name("val")] string Value { get; }
     }
 }
 
@@ -79,19 +50,11 @@ namespace NewModels
 namespace NewModels
 {
     public interface IEntityBase_Writable : IEntityBase { }
-    public interface IDomainBase_Writable : IDomainBase, IEntityBase_Writable { }
-    public interface IVarBase_Writable : IVarBase, IDomainBase_Writable { }
-    public interface IVarBoolean_Writable : IVarBoolean, IVarBase_Writable
+    public interface IT_BaseImplName___Writable : IT_BaseImplName__, IEntityBase_Writable { }
+    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, IT_BaseImplName___Writable { }
+    public interface IT_ConcreteEntity__Writable : IT_ConcreteEntity_, IT_AbstractEntity__Writable
     {
-        new Boolean Value { set; }
-    }
-    public interface IVarString_Writable : IVarString, IVarBase_Writable
-    {
-        new String Value { set; }
-    }
-    public interface IVarInt64_Writable : IVarInt64, IVarBase_Writable
-    {
-        new Int64 Value { set; }
+        new string Value { set; }
     }
 }
 // </generated>
@@ -110,47 +73,28 @@ namespace NewModels.Records
         public EntityBase(IEntityBase source) { }
     }
 
-    public abstract record DomainBase : EntityBase, IDomainBase
+    public abstract record T_BaseImplName_ : EntityBase, IT_BaseImplName__
     {
-        public DomainBase() { }
-        public DomainBase(DomainBase source) : base(source) { }
-        public DomainBase(IDomainBase source) : base(source) { }
+        public T_BaseImplName_() { }
+        public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName__ source) : base(source) { }
     }
 
-    public abstract record VarBase : DomainBase, IVarBase
+    public abstract record T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity_
     {
-        public VarBase() { }
-        public VarBase(VarBase source) : base(source) {  }
-        public VarBase(IVarBase source) : base(source) { }
+        public T_AbstractEntity_() { }
+        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) {  }
+        public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
     }
 
-    public sealed record VarBoolean : VarBase, IVarBoolean
+    public sealed record T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity_
     {
-        public Boolean Value { get; init; }
-        public VarBoolean() { }
-        public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
-        public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
+        public string Value { get; init; } = string.Empty;
+        public T_ConcreteEntity_() { }
+        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
         protected override EntityBase OnShallowCopy() => this;
     }
-
-    public sealed record VarString : VarBase, IVarString
-    {
-        public String Value { get; init; } = String.Empty;
-        public VarString() { }
-        public VarString(VarString source) : base(source) { Value = source.Value; }
-        public VarString(IVarString source) : base(source) { Value = source.Value; }
-        protected override EntityBase OnShallowCopy() => this;
-    }
-
-    public sealed record VarInt64 : VarBase, IVarInt64
-    {
-        public Int64 Value { get; init; }
-        public VarInt64() { }
-        public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
-        public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
-        protected override EntityBase OnShallowCopy() => this;
-    }
-
 }
 
 namespace NewModels.Classes
@@ -195,50 +139,30 @@ namespace NewModels.Classes
         #endregion
     }
 
-    public abstract class DomainBase : EntityBase, IDomainBase_Writable
+    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName___Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
-        public DomainBase() { }
-        public DomainBase(DomainBase source) : base(source) { }
-        public DomainBase(IDomainBase source) : base(source) { }
+        public T_BaseImplName_() { }
+        public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName__ source) : base(source) { }
     }
 
-    public abstract class VarBase : DomainBase, IVarBase_Writable
+    public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
-        public VarBase() { }
-        public VarBase(VarBase source) : base(source) { }
-        public VarBase(IVarBase source) : base(source) { }
+        public T_AbstractEntity_() { }
+        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
+        public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
     }
 
-    public sealed class VarBoolean : VarBase, IVarBoolean_Writable
+    public sealed class T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity__Writable
     {
-        protected override EntityBase OnShallowCopy() => new VarBoolean(this);
+        protected override EntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
         protected override void OnFreeze() { base.OnFreeze(); }
-        public Boolean Value { get; set { CheckNotFrozen(); field = value; } }
-        public VarBoolean() { }
-        public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
-        public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
-    }
-
-    public sealed class VarString : VarBase, IVarString_Writable
-    {
-        protected override EntityBase OnShallowCopy() => new VarString(this);
-        protected override void OnFreeze() { base.OnFreeze(); }
-        public String Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
-        public VarString() { }
-        public VarString(VarString source) : base(source) { Value = source.Value; }
-        public VarString(IVarString source) : base(source) { Value = source.Value; }
-    }
-
-    public sealed class VarInt64 : VarBase, IVarInt64_Writable
-    {
-        protected override EntityBase OnShallowCopy() => new VarInt64(this);
-        protected override void OnFreeze() { base.OnFreeze(); }
-        public Int64 Value { get; set { CheckNotFrozen(); field = value; } }
-        public VarInt64() { }
-        public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
-        public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
+        public string Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
+        public T_ConcreteEntity_() { }
+        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
     }
 }
 
@@ -249,77 +173,39 @@ namespace NewModels.MsgPack3
     using System.Threading;
 
     [MessagePackObject(SuppressSourceGeneration = true)]
-    [Union(5, typeof(VarBoolean))]
-    [Union(6, typeof(VarString))]
-    [Union(7, typeof(VarInt64))]
-    public abstract class DomainBase : EntityBase, IDomainBase_Writable
+    [Union(5, typeof(T_ConcreteEntity_))]
+    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName___Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
-        public DomainBase() { }
-        public DomainBase(DomainBase source) : base(source) { }
-        public DomainBase(IDomainBase source) : base(source) { }
+        public T_BaseImplName_() { }
+        public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName__ source) : base(source) { }
     }
 
     [MessagePackObject(SuppressSourceGeneration = true)]
-    [Union(5, typeof(VarBoolean))]
-    [Union(6, typeof(VarString))]
-    [Union(7, typeof(VarInt64))]
-    public abstract class VarBase : DomainBase, IVarBase_Writable
+    [Union(5, typeof(T_ConcreteEntity_))]
+    public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
-        public VarBase() { }
-        public VarBase(VarBase source) : base(source) { }
-        public VarBase(IVarBase source) : base(source) { }
+        public T_AbstractEntity_() { }
+        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
+        public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
     }
 
     [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class VarBoolean : VarBase, IVarBoolean_Writable
+    public sealed class T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity__Writable
     {
         protected override int OnGetEntityId() => 5;
-        protected override IEntityBase OnShallowCopy() => new VarBoolean(this);
+        protected override IEntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
         protected override void OnFreeze() { base.OnFreeze(); }
         [Key(1)]
-        public Boolean Value { get; set { CheckNotFrozen(); field = value; } }
-        public VarBoolean() { }
-        public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
-        public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
+        public string Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
+        public T_ConcreteEntity_() { }
+        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
 
         protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
         protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
-        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<VarBoolean>(this, _options, cancellation);
-    }
-
-    [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class VarString : VarBase, IVarString_Writable
-    {
-        protected override int OnGetEntityId() => 6;
-        protected override IEntityBase OnShallowCopy() => new VarString(this);
-        protected override void OnFreeze() { base.OnFreeze(); }
-        [Key(1)]
-        public String Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
-        public VarString() { }
-        public VarString(VarString source) : base(source) { Value = source.Value; }
-        public VarString(IVarString source) : base(source) { Value = source.Value; }
-
-        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
-        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<VarString>(this, _options, cancellation);
-    }
-
-    [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class VarInt64 : VarBase, IVarInt64_Writable
-    {
-        protected override int OnGetEntityId() => 7;
-        protected override IEntityBase OnShallowCopy() => new VarInt64(this);
-        protected override void OnFreeze() { base.OnFreeze(); }
-        [Key(1)]
-        public Int64 Value { get; set { CheckNotFrozen(); field = value; } }
-        public VarInt64() { }
-        public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
-        public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
-
-        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
-        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<VarInt64>(this, _options, cancellation);
+        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<T_ConcreteEntity_>(this, _options, cancellation);
     }
 }
