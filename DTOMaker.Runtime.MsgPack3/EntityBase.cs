@@ -91,10 +91,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     public IEntityBase ShallowCopy() => OnShallowCopy();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ThrowIsFrozen(string? memberName) => throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
+    private static void ThrowIsFrozenException(string? memberName) => throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
 
     /// <summary>
     /// Ensures that the entity is not frozen and throws an exception if it is, enforcing mutability for certain operations.
@@ -103,20 +100,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void CheckNotFrozen([CallerMemberName] string? memberName = null)
     {
-        if (_frozen) ThrowIsFrozen(memberName);
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
-
-    /// <summary>
-    /// Ensures that the entity is frozen and throws an exception if it is not, enforcing immutability for certain operations.
-    /// </summary>
-    /// <param name="methodName"></param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected void ThrowIfNotFrozen([CallerMemberName] string? methodName = null)
-    {
-        if (!_frozen) EntityBase.ThrowIsNotFrozenException(methodName);
+        if (_frozen) ThrowIsFrozenException(memberName);
     }
 
     /// <inheritdoc/>
@@ -156,7 +140,6 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     protected virtual ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;
     public async ValueTask Pack(IDataStore dataStore, CancellationToken cancellation)
     {
-        if (_frozen) return;
         if (_packed) return;
         await OnPack(dataStore, cancellation);
         _packed = true;
@@ -172,7 +155,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;
     public async ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
     {
-        ThrowIfNotFrozen();
+        if (!_packed) ThrowIsNotPackedException(nameof(Unpack));
         if (depth < 0) return;
         if (_unpacked) return;
         await OnUnpack(dataStore, depth, cancellation);

@@ -102,11 +102,12 @@ namespace Template.MemBlocks.Tests
         [Fact]
         public async Task BlockHeaderIsConstant()
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             var orig = new TestEntity();
-            await orig.Pack(dataStore, CancellationToken.None);
+            await orig.Pack(dataStore, cancellation);
             orig.Freeze();
-            var buffer = orig.Serialize(CancellationToken.None);
+            var buffer = orig.Serialize(cancellation);
             buffer.Length.ShouldBe(32);
 
             buffer.Span[0].ShouldBe((byte)'|');  // marker byte 0
@@ -130,6 +131,7 @@ namespace Template.MemBlocks.Tests
 
         public async Task Roundtrip_Direct()
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 
             var orig = new T_EntityImplName_();
@@ -144,10 +146,10 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore, CancellationToken.None);
+            await orig.Pack(dataStore, cancellation);
 
             var copy = new T_EntityImplName_(orig);
-            await copy.Pack(dataStore, CancellationToken.None);
+            await copy.Pack(dataStore, cancellation);
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
@@ -157,6 +159,7 @@ namespace Template.MemBlocks.Tests
         [Fact]
         public async Task Roundtrip_AsEntity()
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 
             var orig = new T_EntityImplName_();
@@ -171,12 +174,12 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore, CancellationToken.None);
+            await orig.Pack(dataStore, cancellation);
             orig.Freeze();
 
-            var buffer = orig.Serialize(CancellationToken.None);
+            var buffer = orig.Serialize(cancellation);
             var copy = T_ImplNameSpace_.T_EntityImplName_.CreateInstance(buffer);
-            await copy.UnpackAll(dataStore, CancellationToken.None);
+            await copy.UnpackAll(dataStore, cancellation);
 
             copy.BaseField1.ShouldBe(orig.BaseField1);
             copy.T_RequiredNativeStructMemberName_.ShouldBe(orig.T_RequiredNativeStructMemberName_);
@@ -190,6 +193,7 @@ namespace Template.MemBlocks.Tests
         [Fact]
         public async Task Roundtrip_AsBase()
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 
             var orig = new T_EntityImplName_();
@@ -204,15 +208,15 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore, CancellationToken.None);
+            await orig.Pack(dataStore, cancellation);
             orig.Freeze();
 
-            var buffer = orig.Serialize(CancellationToken.None);
+            var buffer = orig.Serialize(cancellation);
             var recd = T_BaseImplNameSpace_.T_BaseImplName_.CreateInstance(buffer);
             recd.ShouldBeOfType<T_EntityImplName_>();
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();
-            await copy.UnpackAll(dataStore, CancellationToken.None);
+            await copy.UnpackAll(dataStore, cancellation);
 
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();

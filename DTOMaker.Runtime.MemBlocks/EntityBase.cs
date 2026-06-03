@@ -11,7 +11,6 @@ namespace DTOMaker.Runtime.MemBlocks;
 
 public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase>
 {
-    #region Static Helpers
     public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore, CancellationToken cancellation) where T : class, IPackable, IEntityBase, new()
     {
         var empty = new T();
@@ -19,7 +18,6 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         empty.Freeze();
         return empty;
     }
-    #endregion
 
     private const int ClassHeight = 0;
     private const int BlockLength = EntityMetadata.HeaderSize; // V1.0
@@ -74,14 +72,14 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     public void Freeze()
     {
         if (_frozen) return;
-        if (!_packed) ThrowIsNotPackedException();
+        if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(Freeze));
         OnFreeze();
         _frozen = true;
     }
 
     public ReadOnlyMemory<byte> Serialize(CancellationToken cancellation)
     {
-        ThrowIfNotFrozen();
+        if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(Serialize));
         return _readonlyGlobalBlock;
     }
 
@@ -89,44 +87,44 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     public IEntityBase ShallowCopy() => OnPartCopy();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
+    private static void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void ThrowIfFrozen([CallerMemberName] string? methodName = null)
     {
-        if (_frozen) ThrowIsFrozenException(methodName);
+        if (_frozen) EntityBase.ThrowIsFrozenException(methodName);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected T IfNotFrozen<T>(T value, [CallerMemberName] string? methodName = null)
     {
-        if (_frozen) ThrowIsFrozenException(methodName);
+        if (_frozen) EntityBase.ThrowIsFrozenException(methodName);
         return value;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
+    private static void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void ThrowIfNotFrozen([CallerMemberName] string? methodName = null)
     {
-        if (!_frozen) ThrowIsNotFrozenException(methodName);
+        if (!_frozen) EntityBase.ThrowIsNotFrozenException(methodName);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsNotPackedException() => throw new InvalidOperationException($"Cannot freeze before packing.");
+    private static void ThrowIsNotPackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not packed.");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsNotUnpackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} before unpacking.");
+    private static void ThrowIsNotUnpackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} before unpacking.");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void ThrowIfNotUnpacked([CallerMemberName] string? methodName = null)
     {
-        if (_frozen && !_unpacked) ThrowIsNotUnpackedException(methodName);
+        if (_frozen && !_unpacked) EntityBase.ThrowIsNotUnpackedException(methodName);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected T IfUnpacked<T>(T value, [CallerMemberName] string? methodName = null)
     {
-        if (_frozen && !_unpacked) ThrowIsNotUnpackedException(methodName);
+        if (_frozen && !_unpacked) EntityBase.ThrowIsNotUnpackedException(methodName);
         return value;
     }
 

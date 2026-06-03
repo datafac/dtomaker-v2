@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 namespace DTOMaker.Runtime;
 
 /// <summary>
-/// Defines the contract for an entity that manages memory blocks and supports packing and 
-/// unpacking operations to and from a data store.
+/// Defines a contract for an entity that supports incremental serialization and deserialization 
+/// through a data store, called packing and unpacking, allowing for efficient handling of 
+/// large entities with potentially deep object graphs.
 /// </summary>
 public interface IPackable : IEntityBase
 {
@@ -23,13 +24,6 @@ public interface IPackable : IEntityBase
     /// strings, binary blobs (Octets) and any referenced entities to the data store.
     /// </summary>
     ValueTask Pack(IDataStore dataStore, CancellationToken cancellation);
-
-    /// <summary>
-    /// todo remove this method.
-    /// Returns the serialized state of the entity. This will fail if the entity has not 
-    /// been packed yet.
-    /// </summary>
-    ReadOnlyMemory<byte> Serialize(CancellationToken cancellation);
 
     /// <summary>
     /// Returns true if the entity has been unpacked from the data store, otherwise false. 
