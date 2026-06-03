@@ -4,6 +4,7 @@ using DTOMaker.Models;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MemBlocks;
@@ -11,10 +12,10 @@ namespace DTOMaker.Runtime.MemBlocks;
 public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase>
 {
     #region Static Helpers
-    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore) where T : class, IPackable, IEntityBase, new()
+    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore, CancellationToken cancellation) where T : class, IPackable, IEntityBase, new()
     {
         var empty = new T();
-        await empty.Pack(dataStore);
+        await empty.Pack(dataStore, cancellation);
         empty.Freeze();
         return empty;
     }
@@ -78,7 +79,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         _frozen = true;
     }
 
-    public ReadOnlyMemory<byte> Serialize()
+    public ReadOnlyMemory<byte> Serialize(CancellationToken cancellation)
     {
         ThrowIfNotFrozen();
         return _readonlyGlobalBlock;
@@ -216,13 +217,13 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     /// <inheritdoc/>
     public bool IsPacked => _packed;
     /// <inheritdoc/>
-    protected virtual ValueTask OnPack(IDataStore dataStore) => default;
+    protected virtual ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;
     /// <inheritdoc/>
-    public async ValueTask Pack(IDataStore dataStore)
+    public async ValueTask Pack(IDataStore dataStore, CancellationToken cancellation)
     {
         if (_frozen) return;
         if (_packed) return;
-        await OnPack(dataStore);
+        await OnPack(dataStore, cancellation);
         _packed = true;
         OnFreeze();
         _frozen = true;
@@ -233,16 +234,16 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     /// <inheritdoc/>
     public bool IsUnpacked => _unpacked;
     /// <inheritdoc/>
-    protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth) => default;
+    protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;
     /// <inheritdoc/>
-    public async ValueTask Unpack(IDataStore dataStore, int depth = 0)
+    public async ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
     {
         ThrowIfNotFrozen();
         if (depth < 0) return;
         if (_unpacked) return;
-        await OnUnpack(dataStore, depth);
+        await OnUnpack(dataStore, depth, cancellation);
         _unpacked = true;
     }
     /// <inheritdoc/>
-    public ValueTask UnpackAll(IDataStore dataStore) => Unpack(dataStore, int.MaxValue);
+    public ValueTask UnpackAll(IDataStore dataStore, CancellationToken cancellation) => Unpack(dataStore, int.MaxValue, cancellation);
 }

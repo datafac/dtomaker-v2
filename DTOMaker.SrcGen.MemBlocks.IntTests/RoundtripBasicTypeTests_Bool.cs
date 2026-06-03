@@ -20,12 +20,13 @@ public class RoundtripBasicTypeTests_Bool
 
     public async Task<string> Roundtrip_BoolAsync(bool reqValue, bool? optValue)
     {
+        var cancellation = TestContext.Current.CancellationToken;
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 		var orig = new SimpleDTO_Bool { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore);
+        await orig.Pack(dataStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize();
+        var buffer = orig.Serialize(cancellation);
         var copy = new SimpleDTO_Bool(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

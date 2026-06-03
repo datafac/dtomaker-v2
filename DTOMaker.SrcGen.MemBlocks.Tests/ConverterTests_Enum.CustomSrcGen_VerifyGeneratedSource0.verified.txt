@@ -18,6 +18,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
@@ -116,15 +117,15 @@ namespace MyOrg.Models.MemBlocks
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnPack(IDataStore dataStore)
+        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
         {
-            await base.OnPack(dataStore);
+            await base.OnPack(dataStore, cancellation);
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
+        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
         {
-            await base.OnUnpack(dataStore, depth);
+            await base.OnUnpack(dataStore, depth, cancellation);
         }
 
         // -------------------- field map -----------------------------

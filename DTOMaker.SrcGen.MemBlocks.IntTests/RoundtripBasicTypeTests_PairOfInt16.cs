@@ -20,12 +20,13 @@ public class RoundtripBasicTypeTests_PairOfInt16
 {
     public async Task<string> Roundtrip_PairOfInt16Async(PairOfInt16 reqValue, PairOfInt16? optValue)
     {
+        var cancellation = TestContext.Current.CancellationToken;
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
         var orig = new SimpleDTO_PairOfInt16 { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore);
+        await orig.Pack(dataStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize();
+        var buffer = orig.Serialize(cancellation);
         var copy = new SimpleDTO_PairOfInt16(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

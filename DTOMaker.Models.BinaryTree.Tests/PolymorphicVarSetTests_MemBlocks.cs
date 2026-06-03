@@ -20,6 +20,7 @@ public class PolymorphicVarSetTests_MemBlocks
     [InlineData(4)]
     public async Task RoundtripVarString(int valueId)
     {
+        var cancellation = TestContext.Current.CancellationToken;
         string value = valueId switch
         {
             0 => string.Empty,
@@ -32,9 +33,9 @@ public class PolymorphicVarSetTests_MemBlocks
 
         using var dataStore = new TestDataStore();
         VarBase orig = new VarString() { Value = value };
-        await orig.Pack(dataStore);
+        await orig.Pack(dataStore, cancellation);
 
-        var buffer = orig.Serialize();
+        var buffer = orig.Serialize(cancellation);
 
         var metadata = new EntityMetadata(buffer);
         metadata.SignatureBits.ShouldBe(0x01025f7c);
@@ -43,7 +44,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = VarBase.DeserializeFrom(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore);
+        await copy.UnpackAll(dataStore, cancellation);
 
         copy.ShouldBe(orig);
 
@@ -63,6 +64,7 @@ public class PolymorphicVarSetTests_MemBlocks
     public async Task RoundtripVarSetNode_Net48(int valueId)
 #endif
     {
+        var cancellation = TestContext.Current.CancellationToken;
         string value = valueId switch
         {
             0 => string.Empty,
@@ -76,9 +78,9 @@ public class PolymorphicVarSetTests_MemBlocks
         using var dataStore = new TestDataStore();
         VarBase node = new VarString() { Value = value };
         VarSetNode orig = new VarSetNode() { Count = 1, Depth = 0, Key = "abc", Value = node };
-        await orig.Pack(dataStore);
+        await orig.Pack(dataStore, cancellation);
 
-        var buffer = orig.Serialize();
+        var buffer = orig.Serialize(cancellation);
 
         var metadata = new EntityMetadata(buffer);
         metadata.SignatureBits.ShouldBe(0x01025f7c);
@@ -87,7 +89,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = VarSetNode.DeserializeFrom(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore);
+        await copy.UnpackAll(dataStore, cancellation);
 
         copy.ShouldBe(orig);
 
@@ -98,6 +100,7 @@ public class PolymorphicVarSetTests_MemBlocks
     [Fact]
     public async Task RoundtripVarSet01_Empty()
     {
+        var cancellation = TestContext.Current.CancellationToken;
         using var dataStore = new TestDataStore();
         var tree = new VarSetNode();
         //tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
@@ -111,15 +114,15 @@ public class PolymorphicVarSetTests_MemBlocks
         {
             Root = tree
         };
-        await orig.Pack(dataStore);
-        var buffer = orig.Serialize();
+        await orig.Pack(dataStore, cancellation);
+        var buffer = orig.Serialize(cancellation);
 
         string json = buffer.ToDisplay();
         await Verifier.Verify(json);
 
         var copy = new VarSet(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore);
+        await copy.UnpackAll(dataStore, cancellation);
         copy.ShouldBe(orig);
     }
 
@@ -130,6 +133,7 @@ public class PolymorphicVarSetTests_MemBlocks
     public async Task RoundtripVarSet02_1Node_Net48()
 #endif
     {
+        var cancellation = TestContext.Current.CancellationToken;
         using var dataStore = new TestDataStore();
         var tree = new VarSetNode();
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
@@ -143,15 +147,15 @@ public class PolymorphicVarSetTests_MemBlocks
         {
             Root = tree
         };
-        await orig.Pack(dataStore);
-        var buffer = orig.Serialize();
+        await orig.Pack(dataStore, cancellation);
+        var buffer = orig.Serialize(cancellation);
 
         string json = buffer.ToDisplay();
         await Verifier.Verify(json);
 
         var copy = new VarSet(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore);
+        await copy.UnpackAll(dataStore, cancellation);
         copy.ShouldBe(orig);
     }
 
@@ -162,6 +166,7 @@ public class PolymorphicVarSetTests_MemBlocks
     public async Task RoundtripVarSet_Net48()
 #endif
     {
+        var cancellation = TestContext.Current.CancellationToken;
         using var dataStore = new TestDataStore();
         var tree = new VarSetNode();
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
@@ -175,15 +180,15 @@ public class PolymorphicVarSetTests_MemBlocks
         {
             Root = tree
         };
-        await orig.Pack(dataStore);
-        var buffer = orig.Serialize();
+        await orig.Pack(dataStore, cancellation);
+        var buffer = orig.Serialize(cancellation);
 
         string json = buffer.ToDisplay();
         await Verifier.Verify(json);
 
         var copy = new VarSet(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore);
+        await copy.UnpackAll(dataStore, cancellation);
         copy.ShouldBe(orig);
     }
 }

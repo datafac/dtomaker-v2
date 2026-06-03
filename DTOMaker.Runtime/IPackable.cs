@@ -1,6 +1,7 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime;
@@ -21,13 +22,14 @@ public interface IPackable : IEntityBase
     /// Prepares the entity for serialization, which includes packing and emitting any large 
     /// strings, binary blobs (Octets) and any referenced entities to the data store.
     /// </summary>
-    ValueTask Pack(IDataStore dataStore);
+    ValueTask Pack(IDataStore dataStore, CancellationToken cancellation);
 
     /// <summary>
+    /// todo remove this method.
     /// Returns the serialized state of the entity. This will fail if the entity has not 
     /// been packed yet.
     /// </summary>
-    ReadOnlyMemory<byte> Serialize();
+    ReadOnlyMemory<byte> Serialize(CancellationToken cancellation);
 
     /// <summary>
     /// Returns true if the entity has been unpacked from the data store, otherwise false. 
@@ -41,26 +43,10 @@ public interface IPackable : IEntityBase
     /// a greater depth, or call UnpackAll to restore the entire state, or make additional 
     /// calls to Unpack with increasing depth as needed.
     /// </summary>
-    ValueTask Unpack(IDataStore dataStore, int depth = 0);
+    ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation);
 
     /// <summary>
     /// Performs a full restore of the entity's state from the data store.
     /// </summary>
-    ValueTask UnpackAll(IDataStore dataStore);
-}
-
-/// <summary>
-/// Defines the contract for a strongly-typed entity that supports packing and unpacking 
-/// operations to and from a data store.
-/// </summary>
-/// <typeparam name="T"></typeparam>
-public interface IPackable<T> : IPackable where T : class, IPackable<T>
-{
-    /// <summary>
-    /// Deserializes an instance of the entity from the provided buffer.
-    /// </summary>
-    /// <param name="buffer"></param>
-#if NET6_0_OR_GREATER
-    static abstract T Deserialize(ReadOnlyMemory<byte> buffer);
-#endif
+    ValueTask UnpackAll(IDataStore dataStore, CancellationToken cancellation);
 }

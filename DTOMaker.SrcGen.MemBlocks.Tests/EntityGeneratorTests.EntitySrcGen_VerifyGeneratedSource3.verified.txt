@@ -18,6 +18,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MyOrg.Model3.MemBlocks;
 namespace MyOrg.Model3.MemBlocks
@@ -116,19 +117,19 @@ namespace MyOrg.Model3.MemBlocks
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnPack(IDataStore dataStore)
+        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
         {
-            await base.OnPack(dataStore);
-            await Field41_Pack(dataStore);
-            await Field42_Pack(dataStore);
+            await base.OnPack(dataStore, cancellation);
+            await Field41_Pack(dataStore, cancellation);
+            await Field42_Pack(dataStore, cancellation);
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
+        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
         {
-            await base.OnUnpack(dataStore, depth);
-            await Field41_Unpack(dataStore);
-            await Field42_Unpack(dataStore);
+            await base.OnUnpack(dataStore, depth, cancellation);
+            await Field41_Unpack(dataStore, cancellation);
+            await Field42_Unpack(dataStore, cancellation);
         }
 
         // -------------------- field map -----------------------------
@@ -207,12 +208,12 @@ namespace MyOrg.Model3.MemBlocks
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        private async ValueTask Field41_Pack(IDataStore dataStore)
+        private async ValueTask Field41_Pack(IDataStore dataStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
             await PackData(_Field41.AsMemory(), writableField, dataStore);
         }
-        private async ValueTask Field41_Unpack(IDataStore dataStore)
+        private async ValueTask Field41_Unpack(IDataStore dataStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
             var data = await UnpackData(readonlyField, dataStore);
@@ -226,12 +227,12 @@ namespace MyOrg.Model3.MemBlocks
             set => _Field41 = IfNotFrozen(value);
         }
 
-        private async ValueTask Field42_Pack(IDataStore dataStore)
+        private async ValueTask Field42_Pack(IDataStore dataStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(64, 64);
             await PackData(_Field42?.AsMemory(), writableField, dataStore);
         }
-        private async ValueTask Field42_Unpack(IDataStore dataStore)
+        private async ValueTask Field42_Unpack(IDataStore dataStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(64, 64);
             var data = await UnpackData(readonlyField, dataStore);

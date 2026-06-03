@@ -2,8 +2,10 @@
 using DataFac.Storage;
 using DTOMaker.Models;
 using MessagePack;
+using MessagePack.Resolvers;
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MsgPack3;
@@ -14,6 +16,33 @@ namespace DTOMaker.Runtime.MsgPack3;
 /// </summary>
 public abstract class EntityBase : IPackable, IEquatable<EntityBase>
 {
+    private static readonly IFormatterResolver _resolver = CompositeResolver.Create(
+            // resolve custom types first
+            CustomResolver.Instance,
+            // then use standard resolver
+            StandardResolver.Instance
+        );
+
+    protected static readonly MessagePackSerializerOptions _options = MessagePackSerializerOptions.Standard.WithResolver(_resolver);
+
+    /// <inheritdoc/>
+    public static ReadOnlyMemory<byte> Serialize<T>(T entity, CancellationToken cancellation)
+        where T : EntityBase
+    {
+        if (!entity.IsPacked) ThrowIsNotPackedException(nameof(Serialize));
+        return MessagePackSerializer.Serialize<T>(entity, _options, cancellation);
+    }
+
+    /// <inheritdoc/>
+    public static T Deserialize<T>(ReadOnlyMemory<byte> buffer, CancellationToken cancellation)
+        where T : EntityBase
+    {
+        T entity = MessagePackSerializer.Deserialize<T>(buffer, _options, cancellation);
+        entity._frozen = true;
+        entity._packed = true;
+        return entity;
+    }
+
     /// <summary>
     /// Represents the default entity identifier value.
     /// </summary>
@@ -62,7 +91,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     public IEntityBase ShallowCopy() => OnShallowCopy();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
+    private static void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void ThrowIsFrozen(string? memberName) => throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
@@ -78,7 +107,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
+    private static void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
 
     /// <summary>
     /// Ensures that the entity is frozen and throws an exception if it is not, enforcing immutability for certain operations.
@@ -87,7 +116,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void ThrowIfNotFrozen([CallerMemberName] string? methodName = null)
     {
-        if (!_frozen) ThrowIsNotFrozenException(methodName);
+        if (!_frozen) EntityBase.ThrowIsNotFrozenException(methodName);
     }
 
     /// <inheritdoc/>
@@ -101,7 +130,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
 
     #region IPackable implementation
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void ThrowIsNotPackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not packed.");
+    private static void ThrowIsNotPackedException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not packed.");
 
     /// <summary>
     /// Ensures that the entity is packed and throws an exception if it is not.
@@ -110,26 +139,26 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void ThrowIfNotPacked([CallerMemberName] string? methodName = null)
     {
-        if (!_packed) ThrowIsNotPackedException(methodName);
+        if (!_packed) EntityBase.ThrowIsNotPackedException(methodName);
     }
 
-    protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
-    public ReadOnlyMemory<byte> Serialize()
+    protected virtual ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => ReadOnlyMemory<byte>.Empty;
+    public ReadOnlyMemory<byte> Serialize(CancellationToken cancellation)
     {
         ThrowIfNotPacked();
-        return OnSerialize();
+        return OnSerializeqqq(cancellation);
     }
 
     private volatile bool _packed;
     /// <inheritdoc/>
     [IgnoreMember]
     public bool IsPacked => _packed;
-    protected virtual ValueTask OnPack(IDataStore dataStore) => default;
-    public async ValueTask Pack(IDataStore dataStore)
+    protected virtual ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;
+    public async ValueTask Pack(IDataStore dataStore, CancellationToken cancellation)
     {
         if (_frozen) return;
         if (_packed) return;
-        await OnPack(dataStore);
+        await OnPack(dataStore, cancellation);
         _packed = true;
         OnFreeze();
         _frozen = true;
@@ -140,16 +169,16 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     /// <inheritdoc/>
     [IgnoreMember]
     public bool IsUnpacked => _unpacked;
-    protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth) => default;
-    public async ValueTask Unpack(IDataStore dataStore, int depth = 0)
+    protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;
+    public async ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
     {
         ThrowIfNotFrozen();
         if (depth < 0) return;
         if (_unpacked) return;
-        await OnUnpack(dataStore, depth);
+        await OnUnpack(dataStore, depth, cancellation);
         _unpacked = true;
     }
-    public ValueTask UnpackAll(IDataStore dataStore) => Unpack(dataStore, int.MaxValue);
+    public ValueTask UnpackAll(IDataStore dataStore, CancellationToken cancellation) => Unpack(dataStore, int.MaxValue, cancellation);
     #endregion
 
 }

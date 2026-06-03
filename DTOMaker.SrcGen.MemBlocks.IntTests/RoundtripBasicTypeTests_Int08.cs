@@ -19,12 +19,13 @@ public class RoundtripBasicTypeTests_Int08
 {
     public async Task<string> Roundtrip_Int08Async(SByte reqValue, SByte? optValue)
     {
+        var cancellation = TestContext.Current.CancellationToken;
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
         var orig = new SimpleDTO_Int08 { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore);
+        await orig.Pack(dataStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize();
+        var buffer = orig.Serialize(cancellation);
         var copy = new SimpleDTO_Int08(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

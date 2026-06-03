@@ -12,16 +12,17 @@ namespace NewModels.Tests
         [Fact]
         public async Task RoundtripNewModelAsLeaf()
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             var orig = new NewModels.Records.VarString() { Value = "The quick brown fox jumps over the lazy dog." };
             var send = new NewModels.MsgPack3.VarString(orig);
-            await send.Pack(dataStore);
-            var buffer = send.SerializeToMessagePack<NewModels.MsgPack3.VarString>(TestContext.Current.CancellationToken);
-            var recd = buffer.DeserializeFromMessagePack<NewModels.MsgPack3.VarString>(TestContext.Current.CancellationToken);
+            await send.Pack(dataStore, cancellation);
+            var buffer = EntityBase.Serialize<NewModels.MsgPack3.VarString>(send, cancellation);
+            var recd = EntityBase.Deserialize<NewModels.MsgPack3.VarString>(buffer, cancellation);
             recd.ShouldNotBeNull();
             recd.IsFrozen.ShouldBeTrue();
-            //todo recd.IsPacked.ShouldbeTrue();
-            await recd.UnpackAll(dataStore);
+            recd.IsPacked.ShouldBeTrue();
+            await recd.UnpackAll(dataStore, cancellation);
             var copy = new NewModels.Records.VarString(recd);
             copy.ShouldBe(orig);
         }
@@ -29,16 +30,17 @@ namespace NewModels.Tests
         [Fact]
         public async Task RoundtripNewModelAsBase()
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             var orig = new NewModels.Records.VarString() { Value = "The quick brown fox jumps over the lazy dog." };
             var send = new NewModels.MsgPack3.VarString(orig);
-            await send.Pack(dataStore);
-            var buffer = send.SerializeToMessagePack<NewModels.MsgPack3.DomainBase>(TestContext.Current.CancellationToken);
-            var recd = buffer.DeserializeFromMessagePack<NewModels.MsgPack3.DomainBase>(TestContext.Current.CancellationToken) as NewModels.MsgPack3.VarString;
+            await send.Pack(dataStore, cancellation);
+            var buffer = EntityBase.Serialize<NewModels.MsgPack3.DomainBase>(send, cancellation);
+            var recd = EntityBase.Deserialize<NewModels.MsgPack3.DomainBase>(buffer, cancellation) as NewModels.MsgPack3.VarString;
             recd.ShouldNotBeNull();
             recd.IsFrozen.ShouldBeTrue();
-            //todo recd.IsPacked.ShouldbeTrue();
-            await recd.UnpackAll(dataStore);
+            recd.IsPacked.ShouldBeTrue();
+            await recd.UnpackAll(dataStore, cancellation);
             var copy = new NewModels.Records.VarString(recd);
             copy.ShouldBe(orig);
         }

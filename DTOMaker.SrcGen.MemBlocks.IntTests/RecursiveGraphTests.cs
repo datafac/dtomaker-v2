@@ -6,6 +6,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -78,8 +79,8 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
         public async Task<string> Roundtrip_GraphAsync(Tree orig)
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-            await orig.Pack(dataStore);
-            var buffer = orig.Serialize();
+            await orig.Pack(dataStore, CancellationToken.None);
+            var buffer = orig.Serialize(CancellationToken.None);
             var copy = new Tree(buffer);
             copy.ShouldNotBeNull();
             copy.Freeze();

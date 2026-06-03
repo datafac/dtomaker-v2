@@ -27,6 +27,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         //[InlineData(ImplKind.MemBlocks, "abcdefg", 3)]
         public void AddValues(string order, byte maxDepth)
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             MyBinaryTree? tree = new MyBinaryTree();
 
@@ -39,7 +40,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IPackable packable) packable.Pack(dataStore);
+                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
                 tree.Freeze();
             }
 
@@ -86,6 +87,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         //[InlineData(ImplKind.MemBlocks, "dbfaceg", "acegbfd", 0)]
         public void RemoveValues(string addOrder, string removeOrder, byte maxDepth)
         {
+            var cancellation = TestContext.Current.CancellationToken;
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             MyBinaryTree? tree = new MyBinaryTree();
 
@@ -98,7 +100,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IPackable packable) packable.Pack(dataStore);
+                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
                 tree.Freeze();
             }
 
@@ -110,7 +112,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count--;
 
                 // pack and freeze the tree after each removal
-                if (tree is IPackable packable) packable.Pack(dataStore);
+                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
                 tree?.Freeze();
             }
 
@@ -181,7 +183,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         //        {
         //            var tree = CreateEmpty(impl);
         //            {
-        //                if (tree is IPackable packable) packable.Pack(dataStore);
+        //                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
         //                tree.Freeze();
         //            }
         //            tree.Count.ShouldBe(0);
@@ -196,7 +198,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         //                count++;
 
         //                // pack and freeze the tree after each addition
-        //                if (tree is IPackable packable) packable.Pack(dataStore);
+        //                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
         //                tree.Freeze();
         //            }
 

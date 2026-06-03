@@ -7,6 +7,7 @@ using Shouldly;
 using System;
 using System.Buffers;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using T_BaseImplNameSpace_;
 using T_ImplNameSpace_;
@@ -46,8 +47,8 @@ namespace Template.MemBlocks.Tests
 
         protected override int OnGetEntityId() => EntityId;
         protected override void OnFreeze() => base.OnFreeze();
-        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
+        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
         protected override IEntityBase OnPartCopy() => new TestEntity(this);
 
         public TestEntity() : base(_metadata)
@@ -103,9 +104,9 @@ namespace Template.MemBlocks.Tests
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             var orig = new TestEntity();
-            await orig.Pack(dataStore);
+            await orig.Pack(dataStore, CancellationToken.None);
             orig.Freeze();
-            var buffer = orig.Serialize();
+            var buffer = orig.Serialize(CancellationToken.None);
             buffer.Length.ShouldBe(32);
 
             buffer.Span[0].ShouldBe((byte)'|');  // marker byte 0
@@ -143,10 +144,10 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore);
+            await orig.Pack(dataStore, CancellationToken.None);
 
             var copy = new T_EntityImplName_(orig);
-            await copy.Pack(dataStore);
+            await copy.Pack(dataStore, CancellationToken.None);
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
@@ -170,12 +171,12 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore);
+            await orig.Pack(dataStore, CancellationToken.None);
             orig.Freeze();
 
-            var buffer = orig.Serialize();
+            var buffer = orig.Serialize(CancellationToken.None);
             var copy = T_ImplNameSpace_.T_EntityImplName_.CreateInstance(buffer);
-            await copy.UnpackAll(dataStore);
+            await copy.UnpackAll(dataStore, CancellationToken.None);
 
             copy.BaseField1.ShouldBe(orig.BaseField1);
             copy.T_RequiredNativeStructMemberName_.ShouldBe(orig.T_RequiredNativeStructMemberName_);
@@ -203,15 +204,15 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore);
+            await orig.Pack(dataStore, CancellationToken.None);
             orig.Freeze();
 
-            var buffer = orig.Serialize();
+            var buffer = orig.Serialize(CancellationToken.None);
             var recd = T_BaseImplNameSpace_.T_BaseImplName_.CreateInstance(buffer);
             recd.ShouldBeOfType<T_EntityImplName_>();
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();
-            await copy.UnpackAll(dataStore);
+            await copy.UnpackAll(dataStore, CancellationToken.None);
 
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();

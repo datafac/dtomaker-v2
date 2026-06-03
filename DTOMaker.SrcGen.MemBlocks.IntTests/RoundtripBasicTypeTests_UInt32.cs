@@ -2,6 +2,7 @@ using DTOMaker.Models;
 using DTOMaker.SrcGen.MemBlocks.IntTests.MemBlocks;
 using Shouldly;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -21,10 +22,10 @@ public class RoundtripBasicTypeTests_UInt32
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
         var orig = new SimpleDTO_UInt32 { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore);
+        await orig.Pack(dataStore, CancellationToken.None);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize();
+        var buffer = orig.Serialize(CancellationToken.None);
         var copy = new SimpleDTO_UInt32(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

@@ -246,6 +246,7 @@ namespace NewModels.MsgPack3
 {
     using DTOMaker.Runtime.MsgPack3;
     using MessagePack;
+    using System.Threading;
 
     [MessagePackObject(SuppressSourceGeneration = true)]
     [Union(5, typeof(VarBoolean))]
@@ -272,7 +273,7 @@ namespace NewModels.MsgPack3
     }
 
     [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class VarBoolean : VarBase, IVarBoolean_Writable, IPackable<VarBoolean>
+    public sealed class VarBoolean : VarBase, IVarBoolean_Writable
     {
         protected override int OnGetEntityId() => 5;
         protected override IEntityBase OnShallowCopy() => new VarBoolean(this);
@@ -283,19 +284,13 @@ namespace NewModels.MsgPack3
         public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
         public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
 
-        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
-        protected override ReadOnlyMemory<byte> OnSerialize() => MessagePackSerializer.Serialize<VarBoolean>(this);
-        public static VarBoolean Deserialize(ReadOnlyMemory<byte> buffer)
-        {
-            var result = MessagePackSerializer.Deserialize<VarBoolean>(buffer);
-            result.Freeze();
-            return result;
-        }
+        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
+        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<VarBoolean>(this, _options, cancellation);
     }
 
     [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class VarString : VarBase, IVarString_Writable, IPackable<VarString>
+    public sealed class VarString : VarBase, IVarString_Writable
     {
         protected override int OnGetEntityId() => 6;
         protected override IEntityBase OnShallowCopy() => new VarString(this);
@@ -306,19 +301,13 @@ namespace NewModels.MsgPack3
         public VarString(VarString source) : base(source) { Value = source.Value; }
         public VarString(IVarString source) : base(source) { Value = source.Value; }
 
-        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
-        protected override ReadOnlyMemory<byte> OnSerialize() => MessagePackSerializer.Serialize<VarString>(this);
-        public static VarString Deserialize(ReadOnlyMemory<byte> buffer)
-        {
-            var result = MessagePackSerializer.Deserialize<VarString>(buffer);
-            result.Freeze();
-            return result;
-        }
+        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
+        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<VarString>(this, _options, cancellation);
     }
 
     [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class VarInt64 : VarBase, IVarInt64_Writable, IPackable<VarInt64>
+    public sealed class VarInt64 : VarBase, IVarInt64_Writable
     {
         protected override int OnGetEntityId() => 7;
         protected override IEntityBase OnShallowCopy() => new VarInt64(this);
@@ -329,14 +318,8 @@ namespace NewModels.MsgPack3
         public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
         public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
 
-        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
-        protected override ReadOnlyMemory<byte> OnSerialize() => MessagePackSerializer.Serialize<VarInt64>(this);
-        public static VarInt64 Deserialize(ReadOnlyMemory<byte> buffer)
-        {
-            var result = MessagePackSerializer.Deserialize<VarInt64>(buffer);
-            result.Freeze();
-            return result;
-        }
+        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
+        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<VarInt64>(this, _options, cancellation);
     }
 }
