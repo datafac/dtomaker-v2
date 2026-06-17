@@ -6,6 +6,14 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
 {
     public class VersionChecks
     {
+        [Fact]
+        public void DTOMakerVersionCheck()
+        {
+            Version version = typeof(DTOMaker.Runtime.IPackable).Assembly.GetName().Version ?? new Version(0, 0, 0);
+
+            version.Major.ShouldBe(2);
+            version.ToString().ShouldBe("2.1.0.0");
+        }
 
         [Fact]
         public void MessagePackVersionCheck()
