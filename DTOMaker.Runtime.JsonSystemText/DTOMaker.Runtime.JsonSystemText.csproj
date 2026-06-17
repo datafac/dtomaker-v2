@@ -8,8 +8,8 @@
 		<Deterministic>true</Deterministic>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/datafac/dtomaker-all</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/datafac/dtomaker-all</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/datafac/dtomaker-v2</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/datafac/dtomaker-v2</RepositoryUrl>
 		<Company>DataFac</Company>
 		<Product>DTOMaker</Product>
 		<Authors>DataFac Contributors</Authors>
@@ -43,7 +43,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Memory" Version="4.6.3" />
-		<PackageReference Include="System.Text.Json" Version="10.0.8" />
+		<PackageReference Include="System.Text.Json" Version="10.0.9" />
 	</ItemGroup>
 
 	<ItemGroup>

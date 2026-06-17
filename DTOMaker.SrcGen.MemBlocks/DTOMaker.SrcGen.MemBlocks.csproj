@@ -7,8 +7,8 @@
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/datafac/dtomaker-all</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/datafac/dtomaker-all</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/datafac/dtomaker-v2</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/datafac/dtomaker-v2</RepositoryUrl>
 		<Company>DataFac</Company>
 		<Product>DTOMaker</Product>
 		<Authors>DataFac Contributors</Authors>

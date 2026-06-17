@@ -8,8 +8,8 @@
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/datafac/dtomaker-all</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/datafac/dtomaker-all</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/datafac/dtomaker-v2</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/datafac/dtomaker-v2</RepositoryUrl>
 		<Company>DataFac</Company>
 		<Product>DTOMaker</Product>
 		<Authors>DataFac Contributors</Authors>
@@ -45,7 +45,7 @@
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="System.CommandLine" Version="2.0.8" />
+	  <PackageReference Include="System.CommandLine" Version="2.0.9" />
 	</ItemGroup>
 
 </Project>

@@ -1,13 +1,15 @@
 ![Icon](GreenPrinterIcon256.jpg)
 
-# DTOMaker
+# DTOMaker-V2
 
-[![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
+*Note: This is the maintenance repo for V2.x*
+
+[![Build-Deploy](https://github.com/datafac/dtomaker-v2/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-v2/actions/workflows/dotnet.yml)
 ![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
-![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
+![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-v2)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
-![GitHub Repo stars](https://img.shields.io/github/stars/datafac/dtomaker-all)
+![GitHub Repo stars](https://img.shields.io/github/stars/datafac/dtomaker-v2)
 
 This repo contains model-driven compile-time source generators for quickly creating 
 and maintaining polymorphic, immutable DTOs (Data Transport Objects) supporting various
