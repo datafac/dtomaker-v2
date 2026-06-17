@@ -79,10 +79,10 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private string _Field1 = string.Empty;
         [JsonProperty("_f01_001")]
-        public Version Field1
+        public string Field1
         {
-            get => DTOMaker.Models.VersionConverter.ToCustom(_Field1);
-            set => _Field1 = IfNotFrozen(DTOMaker.Models.VersionConverter.ToNative(value));
+            get => _Field1;
+            set => _Field1 = IfNotFrozen(value);
         }
 
 
