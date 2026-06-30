@@ -35,7 +35,7 @@ All DTOs created by these generators support the following features:
 - Incremental serialization: When serializing an object graph, only the parts of the graph 
   that have changed since the last serialization need to be re-serialized. This can significantly 
   improve performance when working with large object graphs where only a small portion of 
-  the data changes between serializations. [Note: Currently, this feature is only supported by
+  the data changes between serializations. [Note: This feature is only supported by
   the MemBlox2 generator.]
 - Built-in type support: Most .NET primitive types are supported out of the box, including 
   integers, floats, strings, Guid, etc. Raw byte arrays are supported using the built-in 
@@ -44,8 +44,6 @@ All DTOs created by these generators support the following features:
 - Custom type support: User-defined value types can be supported via user-defined converters 
   to built-in types. For example, a custom type representing a 3D point could be converted 
   to and from a built-in type such as a tuple of three floats.
-- Collections: Currently, only collections based on balanced binary trees are supported. 
-  [Development is ongoing.]
 
 ## Serialization Protocols
 The following serialization protocols are supported via separate source generators and runtime 
@@ -55,6 +53,13 @@ and runtime library in your project.
   - JSON (Newtonsoft.Json)
   - MessagePack 2.x
   - MemBlox2 (a custom binary format optimised for incremental serialization)
+
+## Collection Support
+Collection types - arrays, lists, dictionaries, etc. - are not natively supported. However, there is an
+additional package, DTOMaker.Models.BinaryTree, providing interfaces and extension methods that allow
+you to define collections based on balanced binary trees.
+
+The ability to model collections natively, with incremental serialization support, is being developed in V3.x.
 
 ## Example
 
@@ -84,15 +89,18 @@ namespace MyModels;
 ## Workflow
 ```mermaid
 flowchart TB
-    def(Define models e.g. IMyDTO.cs)
-    ref1(Reference DTOMaker.Models)
-    ref2(Reference runtime e.g. DTOMaker.Runtime.JsonSystemText)
-    ref3(Reference source generator e.g. DTOMaker.SrcGen.JsonSystemText)
+    defmodel(Define models e.g. IMyDTO.cs)
+    refmodel(Reference DTOMaker.Models)
+    choose(Choose serialization protocol e.g. JsonSystemText)
+    refruntime(Reference runtime e.g. DTOMaker.Runtime.JsonSystemText)
+    refsrcgen(Reference source generator e.g. DTOMaker.SrcGen.JsonSystemText)
     bld(Build/Run)
-    ref1-->def
-    def-->ref2
-    ref2-->ref3
-    ref3-->bld
+    refmodel-->defmodel
+    defmodel-->choose
+    choose-->refruntime
+    choose-->refsrcgen
+    refruntime-->bld
+    refsrcgen-->bld
 ```
 
 ## Open Source Declaration
@@ -130,4 +138,4 @@ You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Miscellaneous
-- This readme was last updated 4th June 2026.
+- This readme was last updated 30th June 2026.
