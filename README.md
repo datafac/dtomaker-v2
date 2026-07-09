@@ -9,7 +9,6 @@
 ![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-v2)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
-![GitHub Repo stars](https://img.shields.io/github/stars/datafac/dtomaker-v2)
 
 This repo contains model-driven compile-time source generators for quickly creating 
 and maintaining polymorphic, immutable DTOs (Data Transport Objects) supporting various
@@ -119,23 +118,18 @@ it up to you to decide how much. Any amount is appreciated.
 
 You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 
-## Coming next in V3.0
+## Coming in V3.x
 - Breaking changes.
 - Incremental serialization (IPackable support) for all DTOs
 - Generators for records and plain classes
 - MessagePack 3.x generator
-
-## Coming later
 - ref type converters
 - more collection types
-- Orleans serialization
-- Protobuf.Net serialization
-- model.json generation
-- command-line alternative
-- logical value equality
+- Orleans generator
+- Protobuf.Net generator
 
 # License
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Miscellaneous
-- This readme was last updated 30th June 2026.
+- This readme was last updated 9th July 2026.
