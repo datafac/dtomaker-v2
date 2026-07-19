@@ -1,0 +1,175 @@
+﻿namespace DTOMaker.Models
+{
+    public sealed class Bits32Converter : DTOMaker.Models.IStructConverter<DataFac.Memory.Bits32, uint>
+    {
+        public Bits32Converter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static DataFac.Memory.Bits32 ToCustom(uint native) { }
+        public static DataFac.Memory.Bits32? ToCustom(uint? native) { }
+        public static uint ToNative(DataFac.Memory.Bits32 custom) { }
+        public static uint? ToNative(DataFac.Memory.Bits32? custom) { }
+    }
+    public sealed class Bits64Converter : DTOMaker.Models.IStructConverter<DataFac.Memory.Bits64, ulong>
+    {
+        public Bits64Converter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static DataFac.Memory.Bits64 ToCustom(ulong native) { }
+        public static DataFac.Memory.Bits64? ToCustom(ulong? native) { }
+        public static ulong ToNative(DataFac.Memory.Bits64 custom) { }
+        public static ulong? ToNative(DataFac.Memory.Bits64? custom) { }
+    }
+    public sealed class DateOnlyConverter : DTOMaker.Models.IStructConverter<System.DateOnly, int>
+    {
+        public DateOnlyConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.DateOnly ToCustom(int native) { }
+        public static System.DateOnly? ToCustom(int? native) { }
+        public static int ToNative(System.DateOnly custom) { }
+        public static int? ToNative(System.DateOnly? custom) { }
+    }
+    public sealed class DateTimeConverter : DTOMaker.Models.IStructConverter<System.DateTime, long>
+    {
+        public DateTimeConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.DateTime ToCustom(long native) { }
+        public static System.DateTime? ToCustom(long? native) { }
+        public static long ToNative(System.DateTime custom) { }
+        public static long? ToNative(System.DateTime? custom) { }
+    }
+    public sealed class DateTimeKindConverter : DTOMaker.Models.IStructConverter<System.DateTimeKind, byte>
+    {
+        public DateTimeKindConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.DateTimeKind ToCustom(byte native) { }
+        public static System.DateTimeKind? ToCustom(byte? native) { }
+        public static byte ToNative(System.DateTimeKind custom) { }
+        public static byte? ToNative(System.DateTimeKind? custom) { }
+    }
+    public sealed class DateTimeOffsetConverter : DTOMaker.Models.IStructConverter<System.DateTimeOffset, DataFac.Memory.PairOfInt64>
+    {
+        public DateTimeOffsetConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.DateTimeOffset ToCustom(DataFac.Memory.PairOfInt64 native) { }
+        public static System.DateTimeOffset? ToCustom(DataFac.Memory.PairOfInt64? native) { }
+        public static DataFac.Memory.PairOfInt64 ToNative(System.DateTimeOffset custom) { }
+        public static DataFac.Memory.PairOfInt64? ToNative(System.DateTimeOffset? custom) { }
+    }
+    public sealed class DayOfWeekConverter : DTOMaker.Models.IStructConverter<System.DayOfWeek, byte>
+    {
+        public DayOfWeekConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.DayOfWeek ToCustom(byte native) { }
+        public static System.DayOfWeek? ToCustom(byte? native) { }
+        public static byte ToNative(System.DayOfWeek custom) { }
+        public static byte? ToNative(System.DayOfWeek? custom) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple=false)]
+    public class EndianAttribute : System.Attribute
+    {
+        public readonly bool IsBigEndian;
+        public EndianAttribute(bool isBigEndian) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Interface, AllowMultiple=false)]
+    public class EntityAttribute : System.Attribute
+    {
+        public readonly int EntityId;
+        public EntityAttribute(int entityId) { }
+    }
+    public static class EntityExtensions
+    {
+        public static TEntity Unfrozen<TEntity>(this TEntity entity)
+            where TEntity :  class, DTOMaker.Models.IEntityBase { }
+    }
+    public interface IEntityBase
+    {
+        bool IsFrozen { get; }
+        void Freeze();
+        DTOMaker.Models.IEntityBase ShallowCopy();
+    }
+    public interface IStructConverter<TCustom, TNative>
+        where TCustom :  struct
+        where TNative :  struct
+    {
+        DTOMaker.Models.NativeType NativeType { get; }
+        TCustom ToCustom(TNative native);
+        TCustom? ToCustom(TNative? native);
+        TNative ToNative(TCustom custom);
+        TNative? ToNative(TCustom? custom);
+    }
+    [System.AttributeUsage(System.AttributeTargets.Interface, AllowMultiple=false)]
+    public class KeyOffsetAttribute : System.Attribute
+    {
+        public readonly int KeyOffset;
+        public KeyOffsetAttribute(int keyOffset) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple=false)]
+    public class MemberAttribute : System.Attribute
+    {
+        public readonly string? ConverterFullName;
+        public readonly System.Type? ConverterType;
+        public readonly DTOMaker.Models.NativeType NativeType;
+        public readonly int Sequence;
+        public MemberAttribute(int sequence) { }
+        public MemberAttribute(int sequence, DTOMaker.Models.NativeType nativeType, System.Type converterType) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple=false)]
+    public class NameAttribute : System.Attribute
+    {
+        public readonly string Name;
+        public NameAttribute(string name) { }
+    }
+    public enum NativeType : short
+    {
+        Undefined = 0,
+        SByte = 1,
+        Byte = 2,
+        Boolean = 3,
+        Int16 = 17,
+        UInt16 = 18,
+        Half = 19,
+        Char = 20,
+        Int32 = 33,
+        UInt32 = 34,
+        Single = 35,
+        PairOfInt16 = 4113,
+        Int64 = 49,
+        UInt64 = 50,
+        Double = 51,
+        PairOfInt32 = 4129,
+        Int128 = 65,
+        UInt128 = 66,
+        Decimal = 67,
+        Guid = 68,
+        PairOfInt64 = 4145,
+        QuadOfInt32 = 8225,
+        Binary = 97,
+        String = 98,
+    }
+    public sealed class NativeTypeConverter : DTOMaker.Models.IStructConverter<DTOMaker.Models.NativeType, short>
+    {
+        public NativeTypeConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static DTOMaker.Models.NativeType ToCustom(short native) { }
+        public static DTOMaker.Models.NativeType? ToCustom(short? native) { }
+        public static short ToNative(DTOMaker.Models.NativeType custom) { }
+        public static short? ToNative(DTOMaker.Models.NativeType? custom) { }
+    }
+    public sealed class TimeOnlyConverter : DTOMaker.Models.IStructConverter<System.TimeOnly, long>
+    {
+        public TimeOnlyConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.TimeOnly ToCustom(long native) { }
+        public static System.TimeOnly? ToCustom(long? native) { }
+        public static long ToNative(System.TimeOnly custom) { }
+        public static long? ToNative(System.TimeOnly? custom) { }
+    }
+    public sealed class TimeSpanConverter : DTOMaker.Models.IStructConverter<System.TimeSpan, long>
+    {
+        public TimeSpanConverter() { }
+        public DTOMaker.Models.NativeType NativeType { get; }
+        public static System.TimeSpan ToCustom(long native) { }
+        public static System.TimeSpan? ToCustom(long? native) { }
+        public static long ToNative(System.TimeSpan custom) { }
+        public static long? ToNative(System.TimeSpan? custom) { }
+    }
+}
