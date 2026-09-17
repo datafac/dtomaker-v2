@@ -12,7 +12,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             Version version = typeof(DTOMaker.Runtime.IPackable).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
             version.Major.ShouldBe(2);
-            version.ToString().ShouldBe("2.1.0.0");
+            version.ToString().ShouldBe("2.2.0.0");
         }
 
         [Fact]

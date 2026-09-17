@@ -19,7 +19,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         {
             var assemblyVersion = typeof(IEntityBase).Assembly.GetName().Version;
             assemblyVersion.ShouldNotBeNull();
-            assemblyVersion.ToString().ShouldBe("2.1.0.0");
+            assemblyVersion.ToString().ShouldBe("2.2.0.0");
         }
 
 #if NET7_0_OR_GREATER
