@@ -122,4 +122,4 @@ You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Miscellaneous
-- This readme was last updated 15th September 2026.
+- This readme was last updated 17th September 2026.
