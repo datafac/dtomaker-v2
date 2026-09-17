@@ -2,7 +2,7 @@
 
 # DTOMaker-V2
 
-*Note: This is the maintenance repo for V2.x*
+*Note: This is the maintenance repo for V2.x. Active development is in the mail repo: https://github.com/datafac/dtomaker-all*
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-v2/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-v2/actions/workflows/dotnet.yml)
 ![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
@@ -50,7 +50,7 @@ libraries. You can choose which ones to use by referencing the appropriate sourc
 and runtime library in your project.
   - JSON (System.Text.Json)
   - JSON (Newtonsoft.Json)
-  - MessagePack 2.x
+  - MessagePack 3.x
   - MemBlox2 (a custom binary format optimised for incremental serialization)
 
 ## Collection Support
@@ -117,16 +117,6 @@ organisation, we ask that you consider sponsoring this project financially. We l
 it up to you to decide how much. Any amount is appreciated.
 
 You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
-
-## Coming in V3.x
-- Breaking changes.
-- Incremental serialization (IPackable support) for all DTOs
-- Generators for records and plain classes
-- MessagePack 3.x generator
-- ref type converters
-- more collection types
-- Orleans generator
-- Protobuf.Net generator
 
 # License
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
