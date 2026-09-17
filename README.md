@@ -2,7 +2,7 @@
 
 # DTOMaker-V2
 
-*Note: This is the maintenance repo for V2.x. Active development is in the mail repo: https://github.com/datafac/dtomaker-all*
+*Note: This is the maintenance repo for V2.x. Active development is in the main repo: https://github.com/datafac/dtomaker-all*
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-v2/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-v2/actions/workflows/dotnet.yml)
 ![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
