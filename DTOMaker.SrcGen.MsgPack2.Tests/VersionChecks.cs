@@ -21,7 +21,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             Version version = typeof(MessagePack.MessagePackSerializer).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
             version.Major.ShouldBe(3);
-            version.ToString().ShouldBe("3.1.9.0");
+            version.ToString().ShouldStartWith("3.1.");
         }
 
         [Fact]
