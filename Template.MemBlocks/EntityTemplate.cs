@@ -622,7 +622,7 @@ namespace T_ImplNameSpace_
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                if (bits.GetBit(T_NullBitPosition_)) return null;
+                if (!bits.GetBit(T_NullBitPosition_)) return null;
                 T_NativeMemberType_ nativeValue = Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span);
                 return T_ConverterSpace_.T_ConverterName_.ToCustom(nativeValue);
             }
@@ -630,7 +630,7 @@ namespace T_ImplNameSpace_
             {
                 ThrowIfFrozen();
                 Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, !value.HasValue);
+                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, value.HasValue);
                 if (newBits != oldBits)
                 {
                     Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span, newBits.Data);
@@ -656,14 +656,14 @@ namespace T_ImplNameSpace_
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                if (bits.GetBit(T_NullBitPosition_)) return null;
+                if (!bits.GetBit(T_NullBitPosition_)) return null;
                 return Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span);
             }
             set
             {
                 ThrowIfFrozen();
                 Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, !value.HasValue);
+                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, value.HasValue);
                 if (newBits != oldBits)
                 {
                     Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span, newBits.Data);

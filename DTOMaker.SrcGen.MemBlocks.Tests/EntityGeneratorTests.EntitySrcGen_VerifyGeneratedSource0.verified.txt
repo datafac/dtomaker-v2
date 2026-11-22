@@ -229,14 +229,14 @@ namespace MyOrg.Models.MemBlocks
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                if (bits.GetBit(1)) return null;
+                if (!bits.GetBit(1)) return null;
                 return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
             }
             set
             {
                 ThrowIfFrozen();
                 Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                Bits32 newBits = oldBits.SetBit(1, !value.HasValue);
+                Bits32 newBits = oldBits.SetBit(1, value.HasValue);
                 if (newBits != oldBits)
                 {
                     Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, newBits.Data);

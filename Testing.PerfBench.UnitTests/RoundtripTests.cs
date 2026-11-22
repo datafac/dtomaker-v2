@@ -1,8 +1,62 @@
+using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Testing.PerfBench.UnitTests
 {
+    public class DefaultValueTests
+    {
+        //[Fact]
+        //public void MemPack()
+        //{
+        //    var orig = new Testing.Models.MemPack.Simple();
+        //    orig.Field1.ShouldBe(0L);
+        //    orig.Field2.ShouldBeNull();
+        //    orig.Field3.ShouldBeNull();
+        //    orig.Field4.ShouldBeEmpty();
+        //}
+
+        [Fact]
+        public void MsgPack2()
+        {
+            var orig = new Testing.Models.MsgPack2.Simple();
+            orig.Field1.ShouldBe(0L);
+            orig.Field2.ShouldBeNull();
+            orig.Field3.ShouldBeNull();
+            orig.Field4.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void MemBlocks()
+        {
+            var orig = new Testing.Models.MemBlocks.Simple();
+            orig.Field1.ShouldBe(0L);
+            orig.Field2.ShouldBeNull();
+            orig.Field3.ShouldBeNull();
+            orig.Field4.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void JsonST()
+        {
+            var orig = new Testing.Models.JsonSystemText.Simple();
+            orig.Field1.ShouldBe(0L);
+            orig.Field2.ShouldBeNull();
+            orig.Field3.ShouldBeNull();
+            orig.Field4.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void JsonNS()
+        {
+            var orig = new Testing.Models.JsonNewtonSoft.Simple();
+            orig.Field1.ShouldBe(0L);
+            orig.Field2.ShouldBeNull();
+            orig.Field3.ShouldBeNull();
+            orig.Field4.ShouldBeEmpty();
+        }
+    }
+
     public class RoundtripTests
     {
         [Fact] public async ValueTask Roundtrip_Int64_MemoryPack() => _ = await new Roundtrip_Int64(true).MemoryPack();
