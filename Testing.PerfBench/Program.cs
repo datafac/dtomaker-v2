@@ -6,7 +6,6 @@ public partial class Program
 {
     public static void Main(string[] args)
     {
-        //var summary = BenchmarkRunner.Run<Roundtrip_Int64>();
-        var summary = BenchmarkRunner.Run<Roundtrip_String>();
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
     }
 }
